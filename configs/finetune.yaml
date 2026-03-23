@@ -1,0 +1,48 @@
+# Model 
+model:
+  variant: small
+  img_size: 128
+  patch_size: 16
+  sar_channels: 6
+  opt_channels: 11
+  embed_dim: 384
+  encoder_depth: 12
+  num_heads: 6
+  fusion: xae
+  pretrained_checkpoint: checkpoints/pretrain/best.pth
+
+# Segmentation head
+head:
+  type: linear            # linear | unet_simple
+  freeze_encoder: true    # freeze encoder weights during fine-tuning
+  num_classes: 1          # binary: landslide or not
+
+# Training 
+train:
+  epochs: 30
+  batch_size: 16
+  base_lr: 1.0e-4
+  weight_decay: 0.01
+  warmup_epochs: 3
+  fp16: true
+  grad_checkpoint: false  # not needed for fine-tuning (smaller model state)
+  save_every: 5
+  seed: 42
+
+# Loss 
+loss:
+  bce_weight: 0.5
+  dice_weight: 0.5
+
+# Data
+data:
+  root: data/s1s2_landslide
+  patch_type: POST1
+  img_size: 128
+  val_split: 0.2
+  num_workers: 4
+
+# Logging
+logging:
+  project: fus-mae
+  run_name: finetune_small_xae_frozen

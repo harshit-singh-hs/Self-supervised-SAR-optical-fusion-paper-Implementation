@@ -1,0 +1,45 @@
+# Data — never commit (3GB+)
+data/
+
+# Model weights and checkpoints
+checkpoints/
+*.pth
+*.pt
+*.ckpt
+
+# Logs
+logs/
+wandb/
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.Python
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# Environment
+.env
+.venv
+env/
+venv/
+*.egg
+
+# VSCode
+.vscode/settings.json
+.vscode/launch.json
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.log

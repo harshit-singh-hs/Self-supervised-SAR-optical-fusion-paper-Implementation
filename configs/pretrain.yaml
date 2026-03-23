@@ -1,0 +1,44 @@
+# Model
+model:
+  variant: small          # tiny | small | base
+  img_size: 128           # spatial size of each patch (pixels)
+  patch_size: 16          # ViT patch size — gives 8x8 = 64 tokens per modality
+  sar_channels: 6         # gVV, gVH, COH, ALPHA, ENTROPY, ANISOTROPY  (POST1)
+  opt_channels: 11        # B02-B12 + NDVI  (POST1)
+  embed_dim: 384          # ViT-Small embedding dimension
+  encoder_depth: 12       # number of transformer blocks (1 is XAttn, 11 are standard)
+  decoder_depth: 4        # lightweight MAE decoder depth
+  num_heads: 6            # attention heads — embed_dim / num_heads = 64
+  mlp_ratio: 4.0          # MLP hidden dim = embed_dim * mlp_ratio
+  fusion: xae             # xae (XAttnEncoder) | xad (XAttnDecoder)
+  masking: consistent     # consistent | independent
+  mask_ratio: 0.75        # fraction of patches to mask
+
+# Training 
+train:
+  epochs: 100
+  batch_size: 16
+  base_lr: 1.5e-4         # effective lr = base_lr * batch_size / 256
+  weight_decay: 0.05
+  warmup_epochs: 10
+  min_lr: 1.0e-6
+  fp16: true              # mixed precision — mandatory on 4GB VRAM
+  grad_checkpoint: true   # gradient checkpointing — saves ~40% VRAM
+  clip_grad: 1.0          # gradient clipping norm
+  save_every: 5           # save checkpoint every N epochs
+  seed: 42
+
+# Data
+data:
+  root: data/s1s2_landslide
+  patch_type: POST1       # only use post-event data
+  img_size: 128
+  val_split: 0.2          # fraction of EIDs held out for validation
+  num_workers: 4
+  pin_memory: true
+
+# Logging
+logging:
+  project: fus-mae
+  run_name: pretrain_small_xae_consistent
+  log_every: 10           # log loss every N steps

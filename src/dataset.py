@@ -1,34 +1,9 @@
-"""
-src/dataset.py
-
-Loads the S1S2 Landslide dataset from pre-split .h5 files.
-Each .h5 file has shape (N, 1, 128, 128) per band key.
-
-Structure discovered:
-  - 355 samples in train, flat per-band layout
-  - POST1_* keys for our target channels
-  - None_MASK for segmentation labels
-  - No NaN/Inf — data is clean
-  - Images already 128x128 — no resize needed
-
-Usage:
-    from src.dataset import get_dataloaders
-    loaders = get_dataloaders('data/s1s2_landslide', batch_size=16)
-    for batch in loaders['train']:
-        sar    = batch['sar']      # (B, 6, 128, 128)
-        optical = batch['optical'] # (B, 11, 128, 128)
-        mask   = batch['mask']     # (B, 1, 128, 128)
-"""
-
 import os
 import numpy as np
 import h5py
 import torch
 from torch.utils.data import Dataset, DataLoader
 
-
-# ── Channel definitions ────────────────────────────────────────────────────────
-# Exact key names as found in the .h5 files
 
 SAR_KEYS = [
     'POST1_gVV',          # Gamma0 VV backscatter    — range: 0 to ~110
@@ -134,8 +109,6 @@ def normalise_optical(channel_name: str, data: np.ndarray) -> np.ndarray:
 
 class LandslideDataset(Dataset):
     """
-    PyTorch Dataset for the S1S2 Landslide .h5 files.
-
     Each .h5 file stores ALL samples for a split together.
     Layout: h5_file[band_key][sample_index, 0, H, W]
     Shape per key: (N_samples, 1, 128, 128)
@@ -396,4 +369,4 @@ if __name__ == '__main__':
     elapsed = time.time() - t0
     print(f"  Full train epoch: {elapsed:.1f}s  ({len(loaders['train'])} batches)")
 
-    print("\n  Gate 3 PASSED — dataset.py is correct\n")
+    

@@ -13,15 +13,15 @@ model:
 
 head:
   type: linear
-  freeze_encoder: true
+  freeze_encoder: false
   num_classes: 1
 
 train:
-  epochs: 30
+  epochs: 50
   batch_size: 16
-  base_lr: 1.0e-4
+  base_lr: 5.0e-5
   weight_decay: 0.01
-  warmup_epochs: 3
+  warmup_epochs: 5
   min_lr: 1.0e-6
   fp16: true
   grad_checkpoint: false
@@ -42,5 +42,5 @@ data:
 
 logging:
   project: fus-mae
-  run_name: finetune_small_xae_frozen
+  run_name: finetune_xae_unfrozen
   log_every: 5
